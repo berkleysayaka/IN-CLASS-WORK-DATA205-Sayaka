@@ -1,0 +1,223 @@
+---
+title: "Assingment 4"
+author: "Sayaka"
+date: "2024-09-26"
+output: html_document
+---
+
+
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(tidyr)
+setwd("D:/Data 205 22017/Capstone/Homework project")
+hcv <- read_csv("Housing_Code_Violatons_20240926.csv")
+
+```
+
+```{r}
+names(hcv)
+```
+```{r}
+head(hcv)
+```
+```{r}
+library(dplyr)
+hcv2 <- hcv |>
+  select(-unitnumber,-Latitude,-Longitude,-Location)
+hcv2
+```
+
+```{r}
+summary(hcv2)
+```
+
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+created_dates <- hcv2 %>%
+  mutate(servicerequestcreateddate = ymd(servicerequestcreateddate),
+         servicerequestclosedtime = ymd(servicerequestclosedtime))
+
+# Calculate the number of days from creation to closure
+closed_dates <- created_dates %>%
+  mutate(days_to_close = as.numeric(servicerequestclosedtime - servicerequestcreateddate))
+
+# Filter out rows where closure date is NA
+df_filtered <- closed_dates %>%
+  filter(!is.na(days_to_close))
+
+# Get the top 10 cities with the most cases
+top10_cities <- df_filtered %>%
+  count(City, sort = TRUE) %>%
+  top_n(10, n) %>%
+  pull(City)
+
+# Filter the data for top 10 cities
+df_top_cities <- df_filtered %>%
+  filter(City %in% top10_cities)
+
+# Summarize average days to close by city
+summary_df <- df_top_cities %>%
+  group_by(City) %>%
+  summarize(avg_days_to_close = mean(days_to_close, na.rm = TRUE)) %>%
+  arrange(desc(avg_days_to_close))
+
+# Plot the average days to close for top 10 cities
+plot1 <- ggplot(summary_df, aes(x = reorder(City, avg_days_to_close), y = avg_days_to_close)) +
+  geom_bar(stat = "identity", fill = "navy", alpha = 0.5) +
+  coord_flip() +
+  labs(title = "Average Days to Close by City",
+       x = "City",
+       y = "Average Days to Close") +
+  theme_minimal() +
+  theme(legend.position = "none", panel.background = element_rect(fill = "gray97"))
+plot1
+
+```
+
+
+```{r}
+library(dplyr)
+
+# Get the top 10 cities with the most cases
+top_cities <- hcv2 %>%
+  count(City, sort = TRUE) %>%
+  top_n(10, n) %>%
+  pull(City)
+
+# Filter the data for top 10 cities
+df_top_cities <- hcv2 %>%
+  filter(City %in% top_cities)
+
+# Analyze the frequency of location descriptions in the top 10 cities
+location_description_analysis <- df_top_cities %>%
+  count(City, locationdescription, sort = TRUE)
+
+# Display the analysis
+location_description_analysis
+```
+
+```{r}
+top_location_descriptions <- df_top_cities %>%
+  count(locationdescription, sort = TRUE) %>%
+  top_n(25, n) %>%
+  pull(locationdescription) |>
+ na.omit()
+
+# Filter the data for top 25 location descriptions
+df_top_locations <- df_top_cities %>%
+  filter(locationdescription %in% top_location_descriptions)
+
+# Count the occurrences of each location description in the top cities
+location_description_counts <- df_top_locations %>%
+  count(City, locationdescription)
+
+# Create a heatmap of location descriptions by top 10 cities
+plot2 <- ggplot(location_description_counts, aes(x = locationdescription, y = City, fill = n)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "limegreen") +
+  labs(title = "Heatmap of Top 25 Location Descriptions by Top 10 Cities",
+       subtitle = "2012-2024",
+       caption = "Housing code violation",
+       x = "Location Description",
+       y = "City ",
+       fill = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme(legend.position = "none", panel.background = element_rect(fill = "bisque4"))
+plot2
+```
+
+```{r}
+write.csv(hcv2, file = "hcv2.csv", row.names = FALSE)
+```
+
+```{r}
+write.csv(hcv2, file = "df_filtered.csv", row.names = FALSE)
+```
+
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter the data for Silver Spring city
+df_silver_spring <- df_top_locations %>%
+  filter(City == "SILVER SPRING")
+
+# Count the occurrences of each location description in Silver Spring
+location_description_counts <- df_silver_spring %>%
+  count(locationdescription, sort = TRUE)
+
+# Create a bar graph for location descriptions in Silver Spring
+plot3 <- ggplot(location_description_counts, aes(x = reorder(locationdescription, n), y = n, fill = locationdescription)) +
+  geom_bar(stat = "identity", fill = "goldenrod3", alpha = 0.5) +
+  coord_flip() +
+  labs(title = "Bar Graph of Location Descriptions in Silver Spring",
+       x = "Location Description",
+       y = "Count") +
+  theme_minimal() +
+  theme(legend.position = "none", panel.background = element_rect(fill = "aliceblue"))
+plot3
+```
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Convert servicerequestcreateddate and servicerequestclosedtime to Date type
+hcv2$servicerequestcreateddate <- as.Date(hcv2$servicerequestcreateddate)
+hcv2$servicerequestclosedtime <- as.Date(hcv2$servicerequestclosedtime)
+hcv2$datefield <- as.Date(hcv2$datefield)
+
+# Filter for city "Silver Spring" and calculate days to close
+closed_dates2 <- hcv2 %>%
+  filter(City == "SILVER SPRING") %>%
+  mutate(days_to_close = as.numeric(servicerequestclosedtime - servicerequestcreateddate))
+
+# Create the plot
+plot4 <- ggplot(closed_dates2, aes(x = datefield, y = days_to_close)) +
+  stat_summary(fun = mean, geom = "line", color = "red") +
+  geom_point(color = "blue") +
+  labs(title = "Days to Close by Date Filed for Silver Spring",
+       x = "Date Filed",
+       y = "Days to Close") +
+  ylim(0, 1000)  # Set y-axis limits to 0 and 5000
+  theme_minimal()
+plot4
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Convert servicerequestcreateddate and servicerequestclosedtime to Date type
+hcv2$inspection_date <- as.Date(hcv2$inspection_date)
+hcv2$Corrected <- as.Date(hcv2$Corrected)
+hcv2$datefield <- as.Date(hcv2$datefield)
+
+# Filter for city "Silver Spring" and calculate days to close
+Corrected1 <- hcv2 %>%
+  filter(City == "SILVER SPRING") %>%
+  mutate(days_to_close = as.numeric(Corrected - inspection_date))
+
+# Create the plot
+plot5 <- ggplot(Corrected1, aes(x = datefield, y = Corrected)) +
+  geom_point(color = "blue") +
+  labs(title = "Day of corrected by Date Filed for Silver Spring",
+       x = "Date Filed",
+       y = "Days of Corrected") +
+  ylim(0, 1000)  # Set y-axis limits to 0 and 5000
+  theme_minimal()
+plot5
+```
+
+
