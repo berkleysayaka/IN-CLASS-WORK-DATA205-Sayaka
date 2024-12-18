@@ -1,0 +1,101 @@
+# 10/16/24
+		Homework 7
+1.	How many records are in athlete_events? 271116
+2.	How many different athletes competed in Olympics held in London? 16924
+3.	Which Olympics host city is furthest north?
+1.	You might have to use CAST or CONVERT to be able to work with the data in the right way.
+2.	You can answer this question either by creating one query with a subquery, or by creating two different queries and executing them one after the other.
+Lillehammer
+4.	What is the list of host cities (with no duplicates)?
+Export the output of the last query as a .csv called host_cities.csv (you will have to look up how to do this; it was not covered in class).
+Athina
+Paris
+"St. Louis"
+London
+Stockholm
+Antwerpen
+Chamonix
+Amsterdam
+"Sankt Moritz"
+"Los Angeles"
+"Lake Placid"
+Berlin
+Garmisch-Partenkirchen
+Helsinki
+Oslo
+"Cortina d'Ampezzo"
+Melbourne
+"Squaw Valley"
+Roma
+Innsbruck
+Tokyo
+"Mexico City"
+Grenoble
+Munich
+Sapporo
+Montreal
+Moskva
+Sarajevo
+Calgary
+Seoul
+Barcelona
+Albertville
+Lillehammer
+Atlanta
+Nagano
+Sydney
+"Salt Lake City"
+Torino
+Beijing
+Vancouver
+Sochi
+"Rio de Janeiro"
+
+HOMEWORK 7 COMMANDS
+
+C:\Users\sayaka>cd C:\
+
+C:\>sqlite3
+SQLite version 3.46.1 2024-08-13 09:16:08 (UTF-16 console I/O)
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open athlete_events db
+extra argument: "db"
+sqlite> .open athlete_events.db
+sqlite> .mode csv
+sqlite> .import athlete_events.csv athlete_events
+sqlite> .schema athlete_events
+sqlite> SELECT COUNT(*) FROM athlete_events;
+sqlite> SELECT COUNT(DISTINCT Name) FROM athlete_events WHERE City = 'London';
+
+
+Q3
+sqlite> .import host_city_locations.csv host_city_locations
+sqlite> .schema host_city_locations
+sqlite> SELECT City
+   ...> FROM host_city_locations
+   ...> WHERE lat = (
+(x1...> SELECT MAX(lat)
+(x1...> FROM host_city_locations);
+sqlite> SELECT DISTINCT City
+   ...> FROM host_city_locations;
+
+Csv output!
+.output host_cities.csv
+SELECT * FROM athlete_events;
+SELECT COUNT(*) FROM athlete_events;
+SELECT COUNT(DISTINCT Name) FROM athlete_events WHERE City = 'London';
+SELECT City
+FROM host_city_locations
+WHERE lat = (
+    SELECT MAX(lat)
+    FROM host_city_locations
+);
+….
+.system open host_cities.csv
+
+
+
+
+
