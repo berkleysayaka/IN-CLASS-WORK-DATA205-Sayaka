@@ -1,0 +1,39 @@
+Data Set Visualization Assessment          		 DATA 205
+
+Choose one of the data sets you are going to use (or are strongly considering for use) for your project; this may be a data set that you created by combining two or more separate data sets.
+Visualize different aspects of your data set, and assess 3-5 interesting/noteworthy visualizations using the form below.  You may add one figure per assessment, if desired.  Each visualization section should take no more than 1 page – be clear and concise.  Do not describe more than 5 visualizations in this form.  If you add figures, they should have appropriate titles and axis labels.
+
+Your name: Sayaka Berkley
+Data set name: . Housing Code Violation
+Link https://data.montgomerycountymd.gov/Consumer-Housing/Housing-Code-Violatons/usij-rq8e/about_data
+
+Describe your data set in 100 words or less: 
+Housing quality and maintenance in Montgomery are areas of interest in the presented dataset. It underscores the role of housing code inspections and also shows where the housing violations were in the area. Furthermore, the dataset questions the correlation between socio-economic (house prices) and building quality. The actual title of the book had a typo, which is quite unusual. In conclusion, the decision to use this dataset is beneficial for providing information on the current situation with housing in Montgomery and making crucial decisions.
+
+Visualization 1: Choropleth map
+The map would then highlight area or districts that have many housing code violations or paint htem in one color, and areas or districts with fewer housing code violations in another color of paint. It would depict the regions that are most sensitive to these problems.
+
+1.	Is this visualization of interest to the public or to project stakeholders?
+The public would be interested in the visualization since it has the actual places of problem areas depicted in it. It would also benefit stakeholders, such as city personnel and housing organizations, when trying to find out the prime locations that need interventions. Both.
+
+
+2.	Is there an opportunity to improve the visualizations, for example, by breaking the data down differently or by visualizing additional attributes? 
+One should consider using a coarser geographic unit to get more detailed information such as block group level.
+
+
+3.	Is the visualization intuitive and technically sound?  In other words, is it actually presenting what a viewer would likely think it does?  In particular, was any data filtering made clear in the title or caption?  
+Overlay one or more layers of violation density to visualize changes in density and exposure over time as well as look for certain trends or patterns.
+
+Visualization 2: Bar Chart
+	The chart would show the number of complaints of various types of housing code violations such as structural, sanitation and occupancy violations in different neighbourhoods.
+
+1.	Is this visualization of interest to the public or to project stakeholders?
+Both. The bar chart would give an understanding of the exact issues that affect the specific cities, which might be useful when implementing corrective measure.
+
+
+2.	Is there an opportunity to improve the visualizations, for example, by breaking the data down differently or by visualizing additional attributes? 
+Enable users navigate to the specific neighborhoods to view further information or violation type for additional information
+
+
+3.	Is the visualization intuitive and technically sound?  In other words, is it actually presenting what a viewer would likely think it does?  In particular, was any data filtering made clear in the title or caption?  
+One might argue that the values should be standardized per population or housing unit, taking into account the size of the neighborhood in question.
