@@ -1,0 +1,19 @@
+Data Set Choice Form						        DATA 205
+Name:  Sayaka Berkley
+Fill out one section with the four pieces of information below for each data set you plan to use; copy and paste the text below to create more sections as needed.
+Data set name: Housing Code Violation
+
+Data set source (URL or description, e.g., “internal sponsor data”): https://data.montgomerycountymd.gov/Consumer-Housing/Housing-Code-Violatons/usij-rq8e/about_data
+
+One-sentence description: Based on the information given in the dataset, general and specific information about the housing standards, maintenance and code violations in Montgomery can be derived as well as understand the connection between socio-economic level and state of buildings.
+
+Concerns or notable information:  
+1.	Correlation between Socioeconomic Factors and Building Quality: Despite, the given dataset not supporting this hypothesis the further investigation of factors that can determine the housing quality in different socio-economic districts is significant. This might include the following: based on income levels; property taxes; and the price of rent.
+2.	Effectiveness of Housing Code Inspections: The dataset mainly focuses on the housing code inspections of homes but such records do not reveal the frequency of inspections or the actions taken against non-compliance, or even an account of how those inspections have helped improve the conditions of homes.
+3.	Data Limitations: The dataset might also suffer from some such limitations in data collection methods, sample size and the type of housing violations incorporated into the study. That in turn could produce qualified estimation and generalization of findings and limitations.
+4.	Typo in the Book Title: Though this may not appear to be a large problem, it might lead to other errors showing up with the data or analysis. Of course, it is worthwhile to know if this typo has any influence on a general trust to the info.
+
+Additional questions to consider:
+1.	Do we have specific sections or regions in Montgomery County that contain high percentages of combined housing code violation?
+2.	How they can identify the frequency of the major housing code violation prevalent in the data set?
+3.	Is there any cyclical nature, or patterns in the quality and maintenance of housing stock?
