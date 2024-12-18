@@ -1,0 +1,43 @@
+HOMEWORK 7 COMMANDS
+
+C:\Users\sayaka>cd C:\
+
+C:\>sqlite3
+SQLite version 3.46.1 2024-08-13 09:16:08 (UTF-16 console I/O)
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open athlete_events db
+extra argument: "db"
+sqlite> .open athlete_events.db
+sqlite> .mode csv
+sqlite> .import athlete_events.csv athlete_events
+sqlite> .schema athlete_events
+sqlite> SELECT COUNT(*) FROM athlete_events;
+sqlite> SELECT COUNT(DISTINCT Name) FROM athlete_events WHERE City = 'London';
+
+
+Q3
+sqlite> .import host_city_locations.csv host_city_locations
+sqlite> .schema host_city_locations
+sqlite> SELECT City
+   ...> FROM host_city_locations
+   ...> WHERE lat = (
+(x1...> SELECT MAX(lat)
+(x1...> FROM host_city_locations);
+sqlite> SELECT DISTINCT City
+   ...> FROM host_city_locations;
+
+Csv output!
+.output host_cities.csv
+SELECT * FROM athlete_events;
+SELECT COUNT(*) FROM athlete_events;
+SELECT COUNT(DISTINCT Name) FROM athlete_events WHERE City = 'London';
+SELECT City
+FROM host_city_locations
+WHERE lat = (
+    SELECT MAX(lat)
+    FROM host_city_locations
+);
+….
+.system open host_cities.csv
