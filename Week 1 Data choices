@@ -1,0 +1,80 @@
+9/11/24
+		Assignment 1
+1. Housing Code Violation
+This dataset appears to be quite interesting as it can provide a glimpse into the actual conditions of housing quality and maintenance in Montgomery of a particular city. It tines the importance and efficiency of carrying out housing code inspection, distribution of housing violation within the study areas, and their relationship with socio-economic factors (house price). On top of this, I liked the original title have a typo.
+1.       Visual effect with maps - Zip code and city names allow you to see at a glance what kind of Violation and how many are there.  (Using heatmap or bubble chart maybe more effective)
+2.       Inspection Date and Correction Date - Compare both of these dates to see if the purchase of a house is risky or not (later correction date means house value  will going down).
+3.       Violation code and city (or zip code)-This can be used to determine if the risk of buying a home is higher or lower depending on the city or area. For example, if the area has a lot of termite damage, we can take the risk that the house we are buying might also be affected.
+4.       Item and Condition - comparing city by city, you may be able to identify trends in how homes are damaged in different areas.
+	One possible question is who the data is intended for. The data should be able to meet the needs of a wide range of buyers, investors, and business owners in the Montgomery County area.
+Link https://data.montgomerycountymd.gov/Consumer-Housing/Housing-Code-Violatons/usij-rq8e/about_data
+	Additional information 
+Rows: 649K 
+Columns: 24
+Housing code enforcement data from 2013 to present. Last update was Sept.8, 2024
+
+2. Library Services
+This dataset is for public library services within Montgomery County. Even though it is a County facility, there are areas where the size and services differ, so it would be interesting to compare those areas.
+1.	Latitude and Longitude - Data Visualization on a Map
+2.	Comparison of access to libraries - Is it close to a metro station? Is there a bike station? Is there a bus service?
+3.	Facilities comparison—does it have a Discovery Room (a free 30-minute private room often with toys for small children), a number of computers, 3D printers, or collaboration rooms? Analyze what type of users are most likely to use the facility.
+4.	Inventory - Does the number of materials relate to the size of the facility? Is it related to location? Are there more books in the collection where transportation is better? The analysis can be done from many angles.
+
+Possible Question - Is this analysis for users' convenience or for improving public library services? 
+Link https://data.montgomerycountymd.gov/Education/Library-Services/ee7s-jhig/about_data
+	Additional Information
+Rows: 21 
+Columns: 105
+Updated in July 2023. It is possible that users are downloading data for their own convenience as many are downloading data without looking at the details. (views 1488, Downloads 1519)
+
+
+
+3. Adaptable Pets
+This dataset is updated daily with information on animals available for rescue at the Montgomery County Adaption Center. This data is truly raw data.
+1.	The type of animals - cats, dogs, birds, reptiles, and other animals that can be rescued, and what size they are.
+2.	How did the animals come to the shelter? Did they come from fosters? Were they abandoned by their owners? Is there a bias in size and species? Is the age of the animal relevant?
+
+	Possible Question –Do you think adaptable pets are seasonal? Are there any species or ages that are easier to take in? How long does it can be take 
+Link https://data.montgomerycountymd.gov/Public-Safety/Adoptable-Pets/e54u-qx42/about_data
+	Additional information 
+Rows: 78
+Columns 12
+Downloads are 13.6k  this data is pretty popular data. Dataset updates multiple times daily.
+
+
+4.Food Inspection
+The Licensure & Regulatory Services Program is responsible for inspecting retail food establishments in Montgomery County to check the safety of food to be sold. Inspection frequency also depends on a facility's risk level, as higher-risk facilities are inspected more frequently.
+1.	Visualization by map - comparison of violations by city. Which cities have what violations?
+2.	Comparison by category—comparison of sanitary conditions in restaurants or markets, comparison by category per city, etc.
+3.	Type of violation - visualization with heat maps
+4.	Inspection type - compare by facility and city. Is each inspection valid?
+
+	Possible questions - will this be a data analysis for users or for restaurateurs?
+Link https://data.montgomerycountymd.gov/Health-and-Human-Services/Food-Inspection/5pue-gfbe/about_data 
+	Additional information
+Rows: 12.3K
+Columns: 31
+The data is pretty popular (15.8K downloads). Update Frequency is Daily. 
+
+
+
+5. Pedestrian Violations ONLY- Traffic Violations Related to Pedestrian Safety
+This dataset contains details on traffic offenses involving pedestrians in Montgomery County. It consists of data relating to electronic traffic violations charged but not personal data.
+1.	Map visualization - see at a glance the areas where Violation occurs
+2.	Heat map of violation types
+3.	Differences by race, age, etc. - could this lead to racism, etc.?
+4.	Location of violations - compare race, age, fines, etc., by location of Violation
+5.	Arrest Type - Are there differences by location, race, age, etc. (need to test if there are statistical differences)
+6.	Search outcome - Does location, age, or race matter when a warning is sufficient?
+7.	Date of stop - Is there any bias regarding days of the week, holidays, etc.? Are seasons relevant?
+
+	Possible question- Is this just a place with more violators, or does it involve racism, etc.?
+Link https://data.montgomerycountymd.gov/Public-Safety/Pedestrian-Violations-ONLY-Traffic-Violations-Rela/esfb-k7mv/about_data 
+	Additional information
+Rows: 9334
+Columns: 43
+Daily base update. Such a rich valuable but not a popular data set (only 59 downloads)
+
+
+Are there areas, days, or times when these violations are more likely to occur?
+Are there differences based on race or other factors? etc., I wanted to analyze the data to avoid trouble as much as possible, as no one wants to be involved in an accident.
