@@ -497,19 +497,19 @@ These z-score outliers helped pinpoint specific cases with anomalous values."By 
 Visualizing Anomalies: To facilitate the interpretation of these findings, visualizations were created to highlight the outliers. Visualizing the distribution of variables and emphasizing the anomalous data points makes it easier to identify patterns and trends. 
 import plotly.express as px
 
-# カスタムデータとしてtax_idを追加
+# add tax_id as custom
 fig = px.scatter(df4, x='lar_count', y='anonymized_tax_id',
                  color='is_anomaly',
                  color_discrete_map={True: 'red', False: 'blue'},
                  hover_data=['tax_id'],  # カスタムデータとしてtax_idを追加
                  title='Scatter Plot of LAR Count vs Anonymized Tax ID')
 
-# ホバーテンプレートのカスタマイズ
+# hovertemplate
 fig.update_traces(
     hovertemplate="<br><b>Tax ID:</b> %{y}<br><b>Original Tax ID:</b> %{customdata[0]}<br><b>LAR Count:</b> %{x}<extra></extra>"
 )
 
-# レイアウトのカスタマイズ
+# customise layout
 fig.update_layout(
     title_text='Scatter Plot of LAR Count vs Anonymized Tax ID',
     title_x=0.5,
