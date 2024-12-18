@@ -1,35 +1,67 @@
-10/23/24
-		Project Plan
-DATA
+HMDA Data 2018-2022
+Home Mortgage Disclosure Act
 Dynamic National Loan-Level Dataset
-The dynamic files contain the national HMDA(Home Mortgage Disclosure Act) datasets, modified by the Bureau to protect applicant and borrower privacy, and updated weekly for all HMDA reporters. This dataset is good for the specific year of HMDA data I will work with from 2018 to 2022. The Dynamic dataset has been updated, and banks have submitted it since March 1, so I think this dataset is more accurate.
-Research goal(s) and questions: 
-The goal of this analysis plan is “to contribute to the improvement of CFPB(Consumer Financial Protection Bureau)'s mortgage-related regulations and the soundness of the mortgage market”
-The bursting of the housing bubble in the wake of the Lehman Shock in 2008 caused many consumers to be treated unfairly in relation to their mortgages, and this led to a serious problem in which many people lost their homes. In light of this situation, the CFPB aims to eradicate unfair practices and lack of transparencies practices in the mortgage market and to create an environment in which consumers can use mortgages with peace of mind.
-1.    In-depth analysis of specific frauds.
-1-1.	Fraud patterns: In what cases are false income statements being made (e.g., self-employed, those with side jobs, etc.)? How fraudulent collateral valuations are carried out (e.g. fraudulent appraisals, overvaluing collateral properties, etc.)
-1-2.	Scale of damage: How much financing was fraudulently carried out through false income declarations. The amount of loss incurred by financial institutions due to fraudulent collateral valuations
-1-3.	Cause analysis: Why is this type of fraud so prevalent (e.g. lax screening standards, lenient penalties for fraud, etc.)
+The dynamic files contain the national HMDA datasets, modified by the Bureau to protect applicant and borrower privacy, and updated weekly for all HMDA reporters.
+This dataset is good for the specific year of HMDA data I will work with from 2018 to 2022. The Dynamic dataset has been updated, and banks have submitted it since March 1, so I think this dataset is more accurate.
+HMDA data and the Census demographic information can be used for data analysis.
 
-2.   Analysis of specific regions or attributes: Focus on specific regions or attributes such as low-income groups or minorities
-2-1.	Unequal impact: Are people from specific regions or attributes more likely to be victims of fraud
-2-2.	Are they being denied loans or forced to take out loans with high interest rates?
-3.	Systemic failures: 
-3-1.	 Do existing regulations adequately protect people from certain regions or groups?
-3-2.	Socio-economic factors: How do poverty, education level, place of residence, etc. affect the incidence of fraud?
+ Research goal(s) and questions: What is/are your goal(s), list each question and how you plan to answer it (methods and data; e.g., t-test on Olympic high jump scoring data, or k-means clustering on gold medalist training data)
+Data
+The CFPB has a wide variety of data.
+I am using the “Home Mortgage Disclosure Act " (I will call HMDA after all) . 
+As I mentioned initially, choosing the data I would use took me quite a while.
 
-Tools, methods, and resources: CFPB uses Python for data analysis; not allow to use public open analysis tools (Tableau), The Census demographic information. 
+These 3 data are currently working with.
+1.HMDA-modified loan application register data is a public dataset that provides detailed information about mortgage loans. It helps ensure fair lending practices and informs public policy.
+2.HMDA maps—The CFPB provides HMDA Maps, a tool that allows users to visualize and explore HMDA data geographically. It helps users identify patterns in lending activity, such as disparities in access to credit based on factors like race, ethnicity, and income.
+3.2022 Mortgage market activity and trends - This is an office research publication. 
+It's used to assess if financial institutions serve communities fairly, identify potential discrimination, and inform public policy. The data includes details on loan applications, purchases, and borrower demographics. In particular, since this research uses data from 2018 to 2022, which is my target, many things are helpful for reference.
 
-Risks and mitigations: What could go wrong and how will you handle things that do go wrong?
-1.	Multivariate relationships: It is difficult to determine the causal relationship with a single factor because multiple factors are intricately intertwined in the occurrence of fraud. 
-2.	External factors: It is impossible to completely rule out the impact of external factors such as economic fluctuations, policy changes, and financial regulations on the occurrence of fraud.
-3.	Privacy violations: Protection of personal information: As the data to be analyzed contains personal attribute information, it is necessary to give sufficient consideration to privacy protection. Appropriate measures such as anonymization and aggregation processing should be taken.
-·Milestones: What will the progression of your project look like? Which parts depend on other parts?
-1.	10/23 Submit the Project plan and creating a slide for presentation in the class Clarification of goals
-2.	10/30 Start building modes/ Visualizations - Assumption of hypothesis
-3.	11/6 Submit the models or visualizations 
-4.	11/13 Working with Fraud patterns and creating a slide for presentation in the class Model construction /Model evaluation
-5.	11/20 Analysis of specific regions or attributes - Model construction /Model evaluation
-6.	12/4 Creating a rough draft – creating a slide for Dry Runs
-7.	12/11 Submit final cleaned up GitHub repo
-8.	12/18 Submit Final report and PowerPoint 
+Now, this is my highlight of this week's presentation:
+
+The final goal of this research is to detect fraud by financial institutions. Generally speaking, don't you think that people don't commit fraud against everyone? For example, when I try to deceive someone, I attack someone who is in a weaker position than me, right?
+So, in the case of the United States, what kind of people are in a weaker position in society?
+
+First, I conducted a t-test between Asian Americans, Hispanic whites, and non-Hispanic whites about homeownership rates. As this is a progress report, I have limited the categories to these three ethnic groups.
+The T-tests confirm significant differences in homeownership rates between racial and ethnic groups. Asian Americans have significantly higher rates than both Hispanic Whites and non-Hispanic Whites, while Hispanic Whites have considerably lower rates than non-Hispanic Whites.
+
+As a result, Asian Americans are most likely to have homeownership. Let's leave aside this, and Let's move on.
+
+The right-hand image shows 4 major home loans in the US, but today’s analysis I focus on conventional loans.
+
+Conventional loans are a common type of mortgage in the US. They offer flexibility regarding interest rates and repayment plans but require strict eligibility criteria. Borrowers must meet specific credit score and collateral requirements. Defaulting on payments can lead to foreclosure.
+This suggests that the neighborhoods where people are trying to buy a house and where many have this loan are areas where many people with stable incomes live and are somewhat safer.
+
+
+The first graph of credit scores that we often hear about when taking out a loan.
+The right-side table of credit scores by race looks like this: As I mentioned in the T-test earlier, white and Asian people have higher credit scores than other groups.
+
+Then, how has median CLTV changed?
+CLTV = stands for Customer Lifetime Value, and in the case of a loan, it is a ratio of the total loan amount for a property and the property's value. It is considered when the lending institution judges the borrower's default risk. So, the lower this value is, the less debt there is, and 
+it becomes easier to get a high-quality loan. So, the Conventional loan I used for this presentation  about is at the bottom of this group. This suggests that the neighborhoods where people are trying to buy a house and where many have this loan are areas where many people with stable incomes live and are somewhat safer.
+
+
+If this is broken down by ethnicity, it looks like a right-hand graph.
+What is notable is that the CLTV values for Asians and Black people are flat.
+It is thought that this is due to differences in income and career choices.
+
+The historical and ongoing racial disparities in economic opportunities have resulted in significant differences in homeownership rates between Asian Americans and Black Americans. Asian Americans, with their higher education levels and income stability, have better access to mortgages and are more likely to own homes. In contrast, Black Americans often face systemic barriers, such as discriminatory lending practices, that limit their ability to obtain mortgages and build wealth through homeownership. These disparities highlight the need for continued efforts to address systemic prejudices and promote equitable access to housing.
+
+As last week's election made clear, more than half of Americans are of the opinion that there is a great inequality between people from certain countries, especially those from Asia.
+I can say this strongly about educational opportunities, not because of any favoritism toward Asians, but because the amount of study during school years is dozens of times greater than that of Americans, as I was born and educated in Asia.
+
+Up to this point, people might think Asians are the most accessible group to get a loan in America, but here's where I find the big contradiction.
+I thought Asians had the least debt and the most stable income, so they would be the easiest group to get a loan, but 
+Remind the Ttest results and CLTV graph- 
+here, white people are the least likely to be refused a loan. Do you see the contradiction?
+
+DTI means that there is little fluctuation in income and little debt (there is enough spare money to pay back debts).
+On the previous slide, it looked as if the Asian group had the most stable income, but here it is clear that the white group has the lowest value.
+One of my next steps in research is to investigate the difference between the previous slide and this one.
+
+Of course, many other factors complicate and make loans appear equal. Still, the next step in my analysis will consider factors such as age groups that are more likely to be discriminated against, residential areas, and gender. Also, I will work with other mortgages with those. 
+I have not included joint loans now, so including them will bring even more things to light.
+
+Although it is uncertain whether this organization will continue to exist after the change of administration next year …
+This is all from me tonight.
+
