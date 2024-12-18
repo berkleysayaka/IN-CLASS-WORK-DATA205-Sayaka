@@ -1,0 +1,628 @@
+## Introduction
+The pandemic has shifted housing preferences, driving demand for homeownership. However, rising housing costs have coincided with increasingly sophisticated financial fraud schemes.  To address this growing concern and support the CFPB’s mission of consumer protection, this research aims to identify potential fraudulent activity within the mortgage market. My research aimed at detecting fraud within financial institutions is crucial. 
+Leveraging my internship and the experience I gained during my internship at the Consumer Financial Protection Bureau (CFPB), I will analyze Home Mortgage Disclosure Act (HMDA) data using various analytical methods to identify potential fraudulent activity. This research will contribute practical examples to the Regulation Technologies team, where I interned. 
+
+
+## Data sets
+Home Mortgage Disclosure Act (HMDA) 
+2018 to 2022
+
+
+# Goal
+My research aims to analyze HMDA data to identify anomalous patterns that may signal fraudulent behavior by financial institutions. By employing a combination of statistical modeling, machine learning, and data mining techniques, including anomaly and outlier detection, I will uncover hidden relationships and unusual data points as a data analysis tool. To do this, I utilize Python and Structure Query Language (SQL). This research can produce additional insights that would help the CFPB more effectively protect consumers, even though financial institution fraud is not overtly committed against consumers. 
+
+
+
+# Summary of data cleaning/ pre-processing.
+Unlike the public open datasets I worked with in previous classes, this data required direct access to the CFPB database. I used pgAdmin4 and Structure Query Language (SQL) to extract the specific values needed for my analysis.and then, the values were converted to CSV files. In addition, it took a long time to reach the CSV files to start analyzing because it was necessary to understand the values in each database. 
+It was found that data maintenance in the early stages reduces the data cleaning load in the long term and helps to improve the accuracy of the data analysis. 
+ 
+The following  details of data required cleaning in order to be effectively analyzed. cleaning are needed. 
+Completes missing values in numerical data with the median 
+Completes missing values in categorical data with mode 
+Outlier detection 
+Detect outliers using Isolation Forest 
+Remove outliers 
+Data Type Conversion 
+-- Data normalization 
+Categorical data encoding 
+Combine encoded data frames with original data frames 
+
+
+
+
+# Basic descriptive statistics
+TThe following 3 data sets were working with examined. 
+1. HMDA LAR data = HMDA-modified loan application register data is a public dataset that provides detailed information about mortgage loans. It helps ensure fair lending practices and informs public policy. The HMDA-LAR data is very high-volume, so I limited extracted the data extracted to from the DMV area. Even so, I extracted 10,000 cases yearly for each state for 150,000 rows of data in total.  
+2. HMDA Panel data provides a powerful tool for analyzing trends and disparities in mortgage lending over time. Unlike cross-sectional data, which captures information at a single point in time, panel data tracks the same individuals or institutions over multiple periods. HMDA Panel data is a valuable resource for researchers and policymakers to analyze trends and disparities in mortgage lending over time.  This data is relatively small compared to HMDA 　LAR and uses nationwide data from nationwide. 
+3. HMDA TS data refers to the Transmittal Sheet (TS) data within the HMDA dataset. This data provides high-level information about financial institutions' overall mortgage lending activity. 
+ 
+*The tax_id in HMDA LAR  is quite personal information, so I did not select it at the SQL stage. On the other hand, Tax_id was a necessary value in the HMDA Panel and HMDA TS data, so it was not omitted when extracting the data. Note that Tax_id is not displayed when visualizing the data. 
+
+
+# Description of your final data product
+import pandas as pd
+import numpy as np 
+import psycopg2
+import matplotlib
+Duplicate Taxpayer Identification Numbers: A significant number of duplicate tax IDs were identified, 24,051 in total, 
+raising concerns about potential fraudulent activities. While some duplicates may be attributed to legitimate reasons 
+like multiple property ownership or data entry errors, further scrutiny is warranted to ensure compliance and security. 
+
+# Detect duplicate tax_id
+df4 = pd.read_csv('/Users/berkleys/Documents/Github-repository/DATA205-berkleysayaka/Capstone project/HMDA_ts_2018-2022.csv')
+duplicate_tax_ids = df4[df4.duplicated(subset='lei', keep=False)]
+
+print(duplicate_tax_ids)
+
+import pandas as pd
+import re
+
+# Define a function to check for inconsistencies between respondent_state and respondent_zip_code
+def check_state_zip_inconsistencies(df4):
+    # Create a dictionary to map states to their corresponding zip code ranges
+    state_zip_ranges = {
+        'AL': range(35000, 37000),
+        'AK': range(99500, 99950),
+        'AZ': range(85000, 86500),
+        'AR': range(71600, 73000),
+        'CA': range(90000, 96200),
+        'CO': range(80000, 81600),
+        'CT': range(6000, 7000),
+        'DE': range(19700, 20000),
+        'FL': range(32000, 35000),
+        'GA': range(30000, 32000),
+        'HI': range(96700, 96900),
+        'ID': range(83200, 83900),
+        'IL': range(60000, 63000),
+        'IN': range(46000, 48000),
+        'IA': range(50000, 51000),
+        'KS': range(66000, 68000),
+        'KY': range(40000, 43000),
+        'LA': range(70000, 71500),
+        'ME': range(3900, 5000),
+        'MD': range(20600, 22000),
+        'MA': range(1000, 2800),
+        'MI': range(48000, 50000),
+        'MN': range(55000, 57000),
+        'MS': range(38600, 40000),
+        'MO': range(63000, 66000),
+        'MT': range(59000, 60000),
+        'NE': range(68000, 70000),
+        'NV': range(88900, 90000),
+        'NH': range(3000, 4000),
+        'NJ': range(7000, 9000),
+        'NM': range(87000, 88500),
+        'NY': range(10000, 15000),
+        'NC': range(27000, 29000),
+        'ND': range(58000, 59000),
+        'OH': range(43000, 46000),
+        'OK': range(73000, 75000),
+        'OR': range(97000, 98000),
+        'PA': range(15000, 20000),
+        'RI': range(2800, 3000),
+        'SC': range(29000, 30000),
+        'SD': range(57000, 58000),
+        'TN': range(37000, 39000),
+        'TX': range(75000, 80000),
+        'UT': range(84000, 85000),
+        'VT': range(5000, 6000),
+        'VA': range(22000, 25000),
+        'WA': range(98000, 99000),
+        'WV': range(24700, 26900),
+        'WI': range(53000, 55000),
+        'WY': range(82000, 83000)
+    }
+
+    # Check for inconsistencies
+    inconsistencies = df4[~df4.apply(lambda row: int(re.match(r'\d+', row['respondent_zip_code']).group()) in state_zip_ranges.get(row['respondent_state'], []), axis=1)]
+    return inconsistencies
+
+# Check for inconsistencies in df6
+inconsistencies = check_state_zip_inconsistencies(df4)
+
+print(inconsistencies) 
+
+# Define a function to check for inconsistencies between respondent_state and respondent_zip_code
+def check_state_zip_inconsistencies(df4):
+    # Create a dictionary to map states to their corresponding zip code ranges
+    state_zip_ranges = {
+        'AL': range(35000, 37000),
+        'AK': range(99500, 99950),
+        'AZ': range(85000, 86500),
+        'AR': range(71600, 73000),
+        'CA': range(90000, 96200),
+        'CO': range(80000, 81600),
+        'CT': range(6000, 7000),
+        'DE': range(19700, 20000),
+        'FL': range(32000, 35000),
+        'GA': range(30000, 32000),
+        'HI': range(96700, 96900),
+        'ID': range(83200, 83900),
+        'IL': range(60000, 63000),
+        'IN': range(46000, 48000),
+        'IA': range(50000, 51000),
+        'KS': range(66000, 68000),
+        'KY': range(40000, 43000),
+        'LA': range(70000, 71500),
+        'ME': range(3900, 5000),
+        'MD': range(20600, 22000),
+        'MA': range(1000, 2800),
+        'MI': range(48000, 50000),
+        'MN': range(55000, 57000),
+        'MS': range(38600, 40000),
+        'MO': range(63000, 66000),
+        'MT': range(59000, 60000),
+        'NE': range(68000, 70000),
+        'NV': range(88900, 90000),
+        'NH': range(3000, 4000),
+        'NJ': range(7000, 9000),
+        'NM': range(87000, 88500),
+        'NY': range(10000, 15000),
+        'NC': range(27000, 29000),
+        'ND': range(58000, 59000),
+        'OH': range(43000, 46000),
+        'OK': range(73000, 75000),
+        'OR': range(97000, 98000),
+        'PA': range(15000, 20000),
+        'RI': range(2800, 3000),
+        'SC': range(29000, 30000),
+        'SD': range(57000, 58000),
+        'TN': range(37000, 39000),
+        'TX': range(75000, 80000),
+        'UT': range(84000, 85000),
+        'VT': range(5000, 6000),
+        'VA': range(22000, 25000),
+        'WA': range(98000, 99000),
+        'WV': range(24700, 26900),
+        'WI': range(53000, 55000),
+        'WY': range(82000, 83000)
+    }
+
+    # Check for inconsistencies
+    inconsistencies = df4[~df4.apply(lambda row: int(re.match(r'\d+', row['respondent_zip_code']).group()) in state_zip_ranges.get(row['respondent_state'], []), axis=1)]
+    return inconsistencies
+
+# Check for inconsistencies in df4
+inconsistencies = check_state_zip_inconsistencies(df4)
+
+print(inconsistencies)
+Anomalous Patterns in Application Data: 729 cases were uncovered. If there are no outliers, the same color will follow the parallel lines in the same state as shown in the diagram, but outliers will deviate from the state lines as shown here. For example, the DC zip code is 12357, which is an outlier. 
+While these patterns may not necessarily indicate fraudulent behavior, they also warrant closer examination to identify potential risks and optimize risk management strategies. 
+import plotly.express as px
+import plotly.graph_objects as go
+import re
+
+# Define a dictionary to map states to their valid ZIP code ranges
+state_zip_ranges = {
+    # ... (rest of the state-zip range pairs)
+}
+
+# Filter the DataFrame to identify inconsistent rows
+inconsistent_data = df4[~df4.apply(lambda row: int(re.match(r'\d+', row['respondent_zip_code']).group()) in state_zip_ranges.get(row['respondent_state'], []), axis=1)]
+
+# Create a scatter plot using Plotly Express
+fig = px.scatter(inconsistent_data,
+                 x='respondent_zip_code',
+                 y='respondent_state',
+                 color='respondent_state',
+                 hover_data=['respondent_city','respondent_name', 'agency_code', 'lar_count'],
+                 title='Inconsistent Respondent Data by State and ZIP Code',
+                 labels={'respondent_zip_code': 'Respondent ZIP Code', 'respondent_state': 'Respondent State'},
+                 symbol='respondent_state')
+
+# Add reference lines for valid ZIP code ranges
+for state, zip_range in state_zip_ranges.items():
+    fig.add_shape(
+        type='line',
+        x0=min(zip_range),
+        y0=state,
+        x1=max(zip_range),
+        y1=state,
+        line=dict(color='LightSeaGreen', width=2, dash='dash')
+    )
+
+# Customize the plot layout
+fig.update_layout(
+    xaxis_title='Respondent ZIP Code',
+    yaxis_title='Respondent State',
+    legend_title='Respondent State',
+    title={
+        'text': 'Inconsistent Respondent Data by State and ZIP Code',
+        'y':0.9,
+        'x':0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'
+    }
+)
+
+# Display the plot
+fig.show()
+
+
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import IsolationForest
+
+# Load the data
+df6 = pd.read_csv('/Users/berkleys/Documents/Github-repository/DATA205-berkleysayaka/Capstone project/2018-2022_DMV_LAR_2.csv')
+
+# Data Cleaning 
+# Handle missing values
+# Complete missing values in numerical data with median
+num_cols = df6.select_dtypes(include=['float64', 'int64']).columns
+df6[num_cols] = df6[num_cols].fillna(df6[num_cols].median())
+
+# Use mode to impute missing values for categorical data
+cat_cols = df6.select_dtypes(include=['object']).columns
+df6[cat_cols] = df6[cat_cols].fillna(df6[cat_cols].mode().iloc[0])
+
+# Regular Value Detection
+# Detect unusual values using Isolation Forest
+iso_forest = IsolationForest(contamination=0.1, random_state=42)
+df6['anomaly'] = iso_forest.fit_predict(df6[num_cols])
+
+# Remove anomalies
+df7 = df6[df6['anomaly'] == 1]
+
+# convert 'applicant_age' to numeric
+df8 = df7.copy()
+df8['applicant_age'] = pd.to_numeric(df7['applicant_age'], errors='coerce')
+
+# Data Transformation
+scaler = StandardScaler()
+df8[num_cols] = scaler.fit_transform(df8[num_cols])
+
+# One-Hot Encoding
+encoder = OneHotEncoder(drop='first', sparse_output=False)
+encoded_cols = encoder.fit_transform(df8[cat_cols])
+encoded_df = pd.DataFrame(encoded_cols, columns=encoder.get_feature_names_out(cat_cols))
+
+# Combine the numerical and encoded categorical data
+df10= pd.concat([df8.reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1).drop(columns=cat_cols)
+
+print(df10.head())
+
+
+Multivariate Analysis and Outlier Detection 
+Next, I tried to use multiple regression analysis to see whether the 26 variables and whether this showed any anomalies. However, 
+the adjusted determination coefficient was low, and the model's explanatory power was insufficient. 
+In addition, multicollinearity was confirmed between some explanatory variables, which may have reduced the reliability of the estimation results. 
+It is challenging to capture nonlinear relationships and interactions in multiple regression analysis. Therefore, I decided to detect outliers using cluster analysis. 
+
+
+import statsmodels.api as sm
+
+# Ensure the DataFrame has the correct columns and drop rows with missing values in these columns
+df_regression = df6[['avg_loan_amount', 'avg_income', 'avg_interest_rate', 'applicant_age']].dropna()
+
+# Convert applicant_age to numeric if it's not already
+df_regression['applicant_age'] = pd.to_numeric(df_regression['applicant_age'], errors='coerce')
+
+# Drop rows with infinite values
+df_regression = df_regression.replace([np.inf, -np.inf], np.nan).dropna()
+
+# Define the dependent variable (Y) and independent variables (X)
+Y = df_regression['avg_loan_amount']
+X = df_regression[['avg_income', 'avg_interest_rate', 'applicant_age']]
+
+# Add a constant to the independent variables
+X = sm.add_constant(X)
+
+# Create the regression model
+model = sm.OLS(Y, X).fit()
+
+# Print the summary of the regression model
+print(model.summary())
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.api as sm
+
+# Ensure the DataFrame has the correct columns and drop rows with missing values in these columns
+# Check if 'applicant_age' is in df10, if not add it from df6
+if 'applicant_age' not in df10.columns:
+	if 'applicant_age' in df6.columns:
+		df10['applicant_age'] = df6['applicant_age']
+	else:
+		raise KeyError("The column 'applicant_age' is not present in df6.")
+
+df_regression = df10[['avg_loan_amount', 'avg_income', 'avg_interest_rate', 'applicant_age']].dropna()
+
+# Convert applicant_age to numeric if it's not already
+df_regression['applicant_age'] = pd.to_numeric(df_regression['applicant_age'], errors='coerce')
+
+# Drop rows with infinite values
+df_regression = df_regression.replace([np.inf, -np.inf], np.nan).dropna()
+
+# Define the required columns
+required_columns = ['avg_loan_amount', 'avg_income', 'avg_interest_rate', 'applicant_age', 
+                    'derived_loan_product_type_Conventional:Subordinate Lien',
+                    'derived_loan_product_type_FHA:First Lien',
+                    'derived_loan_product_type_FHA:Subordinate Lien',
+                    'derived_loan_product_type_FSA/RHS:First Lien',
+                    'derived_loan_product_type_VA:First Lien',
+                    'derived_loan_product_type_VA:Subordinate Lien',
+                    'derived_dwelling_category_Multifamily:Site-Built',
+                    'derived_dwelling_category_Single Family (1-4 Units):Manufactured',
+                    'derived_dwelling_category_Single Family (1-4 Units):Site-Built',
+                    'derived_ethnicity_Free Form Text Only',
+                    'derived_ethnicity_Hispanic or Latino', 'derived_ethnicity_Joint',
+                    'derived_ethnicity_Not Hispanic or Latino',
+                    'derived_race_American Indian or Alaska Native', 'derived_race_Asian',
+                    'derived_race_Black or African American',
+                    'derived_race_Free Form Text Only', 'derived_race_Joint',
+                    'derived_race_Native Hawaiian or Other Pacific Islander',
+                    'derived_race_Race Not Available', 'derived_race_White',
+                    'derived_sex_Joint', 'derived_sex_Male',
+                    'derived_sex_Sex Not Available']
+
+# Check for missing columns
+missing_columns = [col for col in required_columns if col not in df10.columns]
+
+if not missing_columns:
+    # Ensure the DataFrame has the correct columns and drop rows with missing values in these columns
+    df_regression = df10[required_columns].dropna()
+
+    # Convert categorical variables to dummy variables
+    df_regression = pd.get_dummies(df_regression, columns=['derived_loan_product_type_Conventional:Subordinate Lien','applicant_age',
+                    'derived_loan_product_type_FHA:First Lien',
+                    'derived_loan_product_type_FHA:Subordinate Lien',
+                    'derived_loan_product_type_FSA/RHS:First Lien',
+                    'derived_loan_product_type_VA:First Lien',
+                    'derived_loan_product_type_VA:Subordinate Lien',
+                    'derived_dwelling_category_Multifamily:Site-Built',
+                    'derived_dwelling_category_Single Family (1-4 Units):Manufactured',
+                    'derived_dwelling_category_Single Family (1-4 Units):Site-Built',
+                    'derived_ethnicity_Free Form Text Only',
+                    'derived_ethnicity_Hispanic or Latino', 'derived_ethnicity_Joint',
+                    'derived_ethnicity_Not Hispanic or Latino',
+                    'derived_race_American Indian or Alaska Native', 'derived_race_Asian',
+                    'derived_race_Black or African American',
+                    'derived_race_Free Form Text Only', 'derived_race_Joint',
+                    'derived_race_Native Hawaiian or Other Pacific Islander',
+                    'derived_race_Race Not Available', 'derived_race_White',
+                    'derived_sex_Joint', 'derived_sex_Male',
+                    'derived_sex_Sex Not Available'], drop_first=True)
+
+    # Ensure all columns are numeric
+    df_regression = df_regression.apply(pd.to_numeric, errors='coerce')
+
+    # Drop rows with any remaining non-numeric values
+    df_regression = df_regression.dropna()
+
+    # Define the dependent variable (Y) and independent variables (X)
+    Y = df_regression['avg_loan_amount'].astype(float).values
+    X = df_regression.drop(columns=['avg_loan_amount']).astype(float)
+
+    # Add a constant to the independent variables
+    X = sm.add_constant(X)
+
+    # Create the regression model
+    model3 = sm.OLS(Y, X).fit()
+
+    # Export the summary to a text file
+    with open('regression_summary.txt', 'w') as f:
+        f.write(model3.summary().as_text())
+        # Print the summary of the regression model
+        print(model3.summary())
+else:
+    print(f"Missing columns: {missing_columns}")
+
+    
+    from sklearn.cluster import KMeans
+import pandas as pd
+
+import plotly.express as px
+
+# Ensure the DataFrame has the correct columns and drop rows with missing values in these columns
+columns_for_clustering = ['avg_loan_amount', 'avg_interest_rate', 'avg_cltv', 'avg_income']
+df_clustering = df10[columns_for_clustering].dropna()
+
+# Apply KMeans clustering
+kmeans = KMeans(n_clusters=3, random_state=42)
+df_clustering['cluster'] = kmeans.fit_predict(df_clustering)
+
+# Add the clustering results to the original DataFrame
+df10['cluster'] = -1  # Initialize with -1 (not clustered)
+df10.loc[df_clustering.index, 'cluster'] = df_clustering['cluster']
+
+# Visualize the clustering results
+fig = px.scatter_matrix(df_clustering,
+                        dimensions=columns_for_clustering,
+                        color='cluster',
+                        title='KMeans Clustering of Loan Data',
+                        labels={'avg_loan_amount': 'Average Loan Amount', 'avg_interest_rate': 'Average Interest Rate', 'avg_cltv': 'Average CLTV', 'avg_income': 'Average Income'},
+                        hover_data=['cluster'])
+# ... your existing code for KMeans clustering and visualization
+
+# Define the smaller font size
+smaller_font_size = 10  # Adjust this value as needed
+
+
+fig.show()
+
+import pandas as pd
+import numpy as np
+from sklearn.neighbors import LocalOutlierFactor
+
+# Ensure the DataFrame has the correct columns and drop rows with missing values in these columns
+df_clustering = df10[['avg_loan_amount', 'avg_interest_rate', 'avg_cltv', 'avg_income']].dropna()
+
+#  Apply Local Outlier Factor
+clf = LocalOutlierFactor(n_neighbors=20, contamination=0.01)
+y_pred = clf.fit_predict(df_clustering)
+
+# Get the indices of the outliers
+outlier_index = np.where(y_pred == -1)[0]
+
+#  Get the outliers
+outliers = df_clustering.iloc[outlier_index]
+
+print(outliers)
+import pandas as pd
+import plotly.express as px
+
+# Anonymize the tax_id values
+df4['anonymized_tax_id'] = df4['tax_id'].apply(lambda x: 'ID_' + str(hash(x))[:8])
+
+# Ensure the DataFrame has the correct columns
+if all(col in df4.columns for col in ['lei', 'tax_id', 'lar_count']):
+    # Create the scatter plot
+    fig = px.scatter(df4, x='lar_count', y='anonymized_tax_id', color='agency_code',
+                     title='Scatter Plot of LAR Count vs Anonymized Tax ID')
+
+    # Customize the layout
+    fig.update_layout(title_text='Scatter Plot of LAR Count vs Anonymized Tax ID', title_x=0.5)
+    fig.update_yaxes(title_text='Anonymized Tax ID', showline=False)
+    fig.update_xaxes(title_text='LAR Count', showline=False)
+
+    fig.show()
+else:
+    print("The required columns are not present in the DataFrame.")
+# Calculate z-scores
+df4['z_score'] = (df4['lar_count'] - df4['lar_count'].mean()) / df4['lar_count'].std()
+
+# Define anomaly threshold (e.g., 3 standard deviations)
+threshold = 3
+
+# Identify anomalies based on z-score
+df4['is_anomaly'] = df4['z_score'].abs() > threshold
+
+
+These z-score outliers helped pinpoint specific cases with anomalous values."By focusing on these z-score outliers, I pinpointed specific cases with anomalous values were pinpointed. 
+Visualizing Anomalies: To facilitate the interpretation of these findings, visualizations were created to highlight the outliers. Visualizing the distribution of variables and emphasizing the anomalous data points makes it easier to identify patterns and trends. 
+import plotly.express as px
+
+# カスタムデータとしてtax_idを追加
+fig = px.scatter(df4, x='lar_count', y='anonymized_tax_id',
+                 color='is_anomaly',
+                 color_discrete_map={True: 'red', False: 'blue'},
+                 hover_data=['tax_id'],  # カスタムデータとしてtax_idを追加
+                 title='Scatter Plot of LAR Count vs Anonymized Tax ID')
+
+# ホバーテンプレートのカスタマイズ
+fig.update_traces(
+    hovertemplate="<br><b>Tax ID:</b> %{y}<br><b>Original Tax ID:</b> %{customdata[0]}<br><b>LAR Count:</b> %{x}<extra></extra>"
+)
+
+# レイアウトのカスタマイズ
+fig.update_layout(
+    title_text='Scatter Plot of LAR Count vs Anonymized Tax ID',
+    title_x=0.5,
+    coloraxis_showscale=False
+)
+
+fig.show()
+
+# Define a function to detect numerical anomalies using z-scores
+def detect_anomalies(df6, column):
+    df6['z_score'] = (df6[column] - df6[column].mean()) / df6[column].std()
+    anomalies = df6[df6['z_score'].abs() > 3]
+    return anomalies
+
+# Ensure the DataFrame has the correct columns
+if 'avg_loan_amount' in df6.columns and 'avg_cltv' in df6.columns:
+    # Detect anomalies in avg_loan_amount
+    anomalies2 = detect_anomalies(df6, 'avg_loan_amount')
+
+    # Sort the dataframe by avg_cltv
+    df8_sorted = df6.sort_values(by='avg_cltv')
+
+    # Create a scatter plot with sorted data
+    fig = px.scatter(df8_sorted, x='avg_loan_amount', y='avg_cltv',
+                     title='Loan_amount by Loan to value ratio',
+                     hover_data=['derived_loan_product_type', 'state_code','year'])
+
+    # Update marker colors for anomalies (red) and normal data (gray)
+    fig.update_traces(marker=dict(color='gray', opacity=0.7))  # Set gray for non-anomalies with lower opacity
+
+    # Add highlighted anomalies with a separate trace
+    fig.add_scatter(x=anomalies2['avg_loan_amount'], y=anomalies2['avg_cltv'], mode='markers',
+                    marker=dict(color='red', size=10), name='Anomalies')
+
+    fig.show()
+else:
+    print("The required columns are not present in the DataFrame.")
+
+import pandas as pd
+import plotly.express as px
+
+# Define a function to detect numerical anomalies using z-scores
+def detect_anomalies(df6, column):
+    df6['z_score'] = (df6[column] - df6[column].mean()) / df6[column].std()
+    anomalies2 = df6[df6['z_score'].abs() > 3]
+    return anomalies2
+
+# Ensure the DataFrame has the correct columns
+if 'avg_loan_amount' in df6.columns and 'avg_interest_rate' in df6.columns:
+    # Detect anomalies in avg_loan_amount
+    anomalies2 = detect_anomalies(df6, 'avg_loan_amount')
+
+    # Sort the dataframe by avg_interest_rate
+    df6_sorted = df6.sort_values(by='avg_interest_rate')
+
+    # Create a scatter plot with sorted data
+    fig = px.scatter(df6_sorted, x='avg_loan_amount', y='avg_interest_rate',
+                     title='Loan Amount by Interest Rate',
+                     hover_data=['derived_loan_product_type', 'state_code', 'year'])
+
+    # Update marker colors for anomalies (red) and normal data (gray)
+    fig.update_traces(marker=dict(color='gray', opacity=0.7))  # Set gray for non-anomalies with lower opacity
+
+    # Add highlighted anomalies with a separate trace
+    fig.add_scatter(x=anomalies2['avg_loan_amount'], y=anomalies2['avg_interest_rate'], mode='markers',
+                    marker=dict(color='red', size=10), name='Anomalies')
+
+    fig.show()
+
+    # Create a list of anomalies and display them in a table
+    anomalies_list = anomalies2[['avg_loan_amount', 'avg_interest_rate', 'derived_loan_product_type', 'state_code', 'year']]
+    print(anomalies_list)
+else:
+    print("The required columns are not present in the DataFrame.")
+num_anomalies2 = len(anomalies2)
+print("Number of Anomalies", num_anomalies2, "cases")
+ #Define a function to detect numerical anomalies using z-scores
+def detect_anomalies(df6, column):
+    df6['z_score'] = (df6[column] - df6[column].mean()) / df6[column].std()
+    anomalies5 = df6[df6['z_score'].abs() > 3]
+    return anomalies5
+
+# Ensure th DataFrame has the correct6 columns
+if 'avg_loan_amount' in df6.columns and 'avg_income' in df6.columns:
+    # Detect anomalies in avg_loan_amount
+    anomalies6 = detect_anomalies(df6, 'avg_loan_amount')
+
+    # Sort the dataframe by avg_income
+    df6_sorted2 = df6.sort_values(by='avg_loan_amount')
+
+    # Create a scatter plot with sorted data
+    fig = px.scatter(df6_sorted2, x='avg_loan_amount', y='avg_income',
+                     title='Loan_amount by Income',
+                     hover_data=['derived_loan_product_type', 'state_code','year'])
+
+    # Update marker colors for anomalies (red) and normal data (gray)
+    fig.update_traces(marker=dict(color='gray', opacity=0.7))  # Set gray for non-anomalies with lower opacity
+
+    # Add highlighted anomalies with a separate trace
+    fig.add_scatter(x=anomalies6['avg_loan_amount'], y=anomalies6['avg_income'], mode='markers',
+                    marker=dict(color='red', size=10), name='Anomalies')
+
+    fig.show()
+else:
+    print("The required columns are not present in the DataFrame.")
+num_anomalies_income_vs_loan = len(anomalies2)
+print("Number of anomalies based on avg_income vs avg_loan_amount:", num_anomalies_income_vs_loan)
+
+# Conclusion and Future Direcions
+As for how these unusual values and properties might indicate specific types of fraud or errors, further investigation by CFPB experts is necessary.As for which unusual values and properties are for which, that is a task best suitedI would like to leave this as a task for the CFPB specialists to investigate considering potential due to legal issues and the responsibilities of the  internship position. 
+
+# Challenges and Triumphs
+My internship at the CFPB provided invaluable experience, though it presented initial challenges in adapting to a new technological environment and mastering SQL. Through persistence and guidance, I successfully navigated these obstacles. Collaborating with talented CFPB professionals and learning from their expertise enriched my experience. 
+
+<Next steps and recommendations>
+Major life decisions like homeownership require careful consideration, especially in a housing market with fluctuating interest rates. While trust in financial institutions is essential, it's prudent to be aware of potential risks and seek expert advice. To enhance the accuracy of future analyses, improving data quality and implementing robust data cleaning procedures are recommended. Additionally, incorporating advanced machine learning techniques, such as anomaly detection algorithms, could further refine identifying unusual patterns.
