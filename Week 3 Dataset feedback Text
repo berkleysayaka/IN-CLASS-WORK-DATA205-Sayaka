@@ -1,0 +1,63 @@
+Date: 9/18/24
+
+Instructions: Copy and paste the table below for each data set (you should describe 2 – 5).  The information you provide should be in list form, using bullet points.  Be detailed but not wordy.  Rename this file to include your name instead of “YourName”.
+
+Data set source	Housing Code Violation – dataMontgomery
+https://data.montgomerycountymd.gov/Consumer-Housing/Housing-Code-Violatons/usij-rq8e/about_data
+•	
+Data set description	•	The data offer significant information on housing quality and maintenance in Montgomery. They underscore the need to conduct housing code inspections and demonstrate the spatial dispersion of housing violations across the study area, as well as the relationship involving socioeconomic characteristics (house prices). Also, the original title that was provided had a typo, which is interesting. 649K Rows, 24 columns Update term: Quarterly
+Comment on the quality of the data	•	Overall, the dataset seems to be useful for comprehending the condition of housing in Montgomery. It provides information on the nature of violation distribution, the connection between housing quality and poverty level, and necessity of code enforcement.
+What are the primary columns of interest?	•	Violation ID
+How might you filter the data?	•	By City, disposition, violation code
+What initial visualizations do you recommend?	•	Visual effect with map
+What are some limitations of the data?	•	Data standardization – the inspector is not one but many, so the violation could be different 
+•	Human error – As we can see the original title (Typo); there are some errors.
+What are some potential improvements to this data set?	•	Data cleaning 
+
+Data set source	Library services - dataMontgomery
+https://data.montgomerycountymd.gov/Education/Library-Services/ee7s-jhig/about_data
+Data set description	•	The dataset is about the services offered by public libraries in Montgomery County Maryland. This information relates to the geographical distribution and location of libraries, the size and services offered by those libraries, staff complement, library usage statistics and the funding for the libraries. Using this data, it will be possible to show differences in the delivery of library services across the various parts of the county and look for gaps that will require attention.       21 Rows, 105 Columns, annually update                                                                                                                                                                                                                                                                                                                                                                                                                  
+Comment on the quality of the data	•	• If at all possible, utilize data from other county public libraries to learn about best practices and regional trends (Facilities).
+•	Collaboration with the Census: Data Analysis - Are there differences in population distribution and library size?
+What are the primary columns of interest?	•	Library size and offered services
+How might you filter the data?	•	Zip code, Size, Services offered
+What initial visualizations do you recommend?	•	Map or Heatmap of services offered
+What are some limitations of the data?	•	The dataset updates annually, so the data is not real time and may not reflect the most current update.
+What are some potential improvements to this data set?	•	Mentioned previous question, the data updating once a year, the data my not include the most recent service
+
+Data set source	•	Adaptable pets -dataMontgomery
+https://data.montgomerycountymd.gov/Public-Safety/Adoptable-Pets/e54u-qx42/about_data
+
+Data set description	•	This dataset is updated daily with information on animals available for rescue at the Montgomery County Adaption Center. This data is truly raw data. 39 rows, 12 columns, daily update
+Comment on the quality of the data	•	The total number changes from day to day, so it is necessary to narrow down the day on which to analyze the data.
+What are the primary columns of interest?	•	Animal type
+How might you filter the data?	•	Pet type, Pet size, Breed, Sex, In Date 
+What initial visualizations do you recommend?	•	Bargraph- number of each pets and pet size 
+What are some limitations of the data?	•	Since there is no data for long periods (years), etc., it is not possible to understand the trends for years or seasons.
+What are some potential improvements to this data set?	•	What are some potential improvements to this data set?
+
+Data set source	•	Food inspection – dataMontgomery
+ https://data.montgomerycountymd.gov/Health-and-Human-Services/Food-Inspection/5pue-gfbe/about_data 
+
+Data set description	•	The Licensure & Regulatory Services Program conducts surveys of retails food selling establishments in Montgomery County with an aim of safeguarding foods. An independent component is the frequency of inspection, which depends on the risk rating of the facility and therefore can be different for relatively similar facilities. 12.3K rows, 31 columns, daily update.
+Comment on the quality of the data	•	Whether there is variation in the timing of the inspection.
+•	Whether the conditions for the tests are all the same.
+What are the primary columns of interest?	•	Inspection Results 
+How might you filter the data?	•	City, Inspection results, Category, Location
+What initial visualizations do you recommend?	•	Map- Comparison of violations conditions in restaurants or markets
+•	Type of violation heat maps
+What are some limitations of the data?	•	Standardization of inspection methods?
+What are some potential improvements to this data set?	•	Standardization of inspection methods.
+
+Data set source	•	Pedestrian Violation- dataMontgomery
+https://data.montgomerycountymd.gov/Public-Safety/Pedestrian-Violations-ONLY-Traffic-Violations-Rela/esfb-k7mv/about_data 
+
+Data set description	•	The data set comprises information on electronic traffic violations of pedestrians in Montgomery County. The Common Consolidated Corporate Tax Base does not include personal data. 9334 rows, 43 columns, Daily base update
+Comment on the quality of the data	•	Because the data is for four years, it is a short-term analysis, so the long-term trend of violations cannot be determined.
+What are the primary columns of interest?	•	Description
+How might you filter the data?	•	Location, Description, Year, Make, Search reason ..etc
+What initial visualizations do you recommend?	•	Map – areas where violation occurs
+•	Heatmap – violation type
+What are some limitations of the data?	•	Due to daily data updates, data for 2024 only exists until early September, so it cannot be used for annual analysis.
+What are some potential improvements to this data set?	•	Hi pedestrian traffic volumes – Analyzing track pedestrian movement, identify areas
+
